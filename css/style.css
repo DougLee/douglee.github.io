@@ -1,17 +1,29 @@
 * {
-  margin: 0;
-  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html {
+  background-color: #fff;
+  min-height: 100%;
 }
 body {
-  background: #e6e6e6;
-  color: #444;
-  font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", sans-serif;
-  font-size: 14px;
+  background: #fff;
+  color: #535353;
+  font: 400 16px/1.7 Georgia, "Xin Gothic", "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   text-shadow: 0 0 1px transparent;
 }
 @media screen and (max-width: 600px) {
   body {
     font-size: 12px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .archive__list li time,
+  .archive__list li span {
+    display: none;
   }
 }
 h1,
@@ -76,8 +88,21 @@ a:hover {
 #content {
   margin-top: 20px;
 }
+.archive__list li {
+  line-height: 30px;
+  margin-bottom: 2px;
+}
+.archive__year {
+  color: #999;
+  font-family: Courier, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+.archive__time {
+  color: #666;
+  font-family: Courier, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 14px;
+}
 #header {
-  height: 45px;
+  height: auto;
   background: #bb3131;
   background: -webkit-linear-gradient(top, #c63a3a 0, #c43837 29%, #c13635 55%, #bd3232 55%, #ba3030 77%, #b32b2b 100%);
   background: -moz-linear-gradient(top, #c63a3a 0, #c43837 29%, #c13635 55%, #bd3232 55%, #ba3030 77%, #b32b2b 100%);
@@ -376,39 +401,24 @@ article footer .tags {
   text-decoration: none;
   text-shadow: none;
 }
-.archive-title {
+.archive-list li {
+  line-height: 30px;
+  margin-bottom: 2px;
+}
+.archive-year {
   color: #999;
-  font-weight: normal;
-  text-shadow: 0 0 1px #fff;
-  background: #fff;
-  padding: 28px 0 28px 28px;
-  -webkit-box-shadow: 0 2px 6px rgba(100,100,100,0.3);
-  box-shadow: 0 2px 6px rgba(100,100,100,0.3);
-  margin-bottom: 20px;
+  font-family: Courier, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
-.archive {
-  margin-bottom: 50px;
-}
-.archive ul {
-  list-style: none;
-  margin-left: 43px;
-  margin-top: -26px;
-}
-.archive ul li {
-  margin: 7px 0;
-}
-.archive ul li time {
-  margin-right: 8px;
+.archive-time {
   color: #666;
+  font-family: Courier, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 14px;
 }
-.archive .archive-itme {
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed #ddd;
-}
-.archive .archive-year {
-  color: #666;
-  margin-bottom: 10px;
+@media screen and (max-width: 500px) {
+  .archive-list li time,
+  .archive-list li span {
+    display: none;
+  }
 }
 #sidebar {
   width: 33%;
