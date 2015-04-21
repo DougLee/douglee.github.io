@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Dougle Lee&#39; BLog › 我常用的Sublime Text插件</title>
+  <meta name="author" content="douglee">
+  
+  <meta name="description" content="Sublime Text是非常有逼格的一个编辑器，有各种丰富的插件，可以打造成顺手IDE，今天就总结一下我常用的一些插件。
+今年四月份的时候刚刚抛弃了ST2，拥抱ST3~
+Package ControlPackage Control是用来安装各个插件的一个工具。安装方法如下：
+按Ctrl + `，在">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="我常用的Sublime Text插件"/>
+  <meta property="og:site_name" content="Dougle Lee&#39; BLog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="http://feeds.feedburner.com/willerce" title="Dougle Lee&#39; BLog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32857089-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">Dougle Lee&#39; BLog</a></h1>
+  <h2><a href="/">随心随性，万法同宗</a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/blog">Blog</a></li>
+      
+      <li><a href="https://github.com/DougLee">Github</a></li>
+      
+      <li><a href="http://weibo.com/daominlee">Weibo</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">我常用的Sublime Text插件</h1>
+  
+
+      
+      <time datetime="2015-04-21T13:26:39.000Z">2015-04-21</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>Sublime Text是非常有逼格的一个编辑器，有各种丰富的插件，可以打造成顺手IDE，今天就总结一下我常用的一些插件。</p>
+<p>今年四月份的时候刚刚抛弃了ST2，拥抱ST3~</p>
+<h3 id="Package_Control">Package Control</h3><p>Package Control是用来安装各个插件的一个工具。安装方法如下：</p>
+<p>按Ctrl + `，在弹出的框内粘贴如下一段代码，然后Enter，等待安装完成即可。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)</span><br></pre></td></tr></table></figure></p>
+<p>待安装完成后按Ctrl + Shift + P,在弹出框内输入install找到Package Control:Install Package 功能项，进入，即可搜索安装需要安装的插件了</p>
+<p>更多有关安装Package Control的信息，点击<a href="https://packagecontrol.io/installation" target="_blank" rel="external">这里</a></p>
+<h3 id="Python_Anaconda">Python Anaconda</h3><p>开发Python的必备利器。</p>
+<h3 id="Terminal">Terminal</h3><p>在Sublime Text中打开一个terminal终端，快捷键是 Ctrl + Shift + T</p>
+<h3 id="JsFormat">JsFormat</h3><p>一个格式化JS代码的插件。</p>
+<h3 id="Emmet">Emmet</h3><p>Sublime Text的Zen Coding插件。</p>
+<h3 id="OmniMarkupPreviewer">OmniMarkupPreviewer</h3><p>刚开始使用，可以在浏览器中预览Markdown格式（Ctrl + Alt + O），可以导出到HTML格式，更多功能还在摸索。</p>
+<h3 id="常用的快捷键">常用的快捷键</h3><p>Ctrl + B: build python代码<br>Ctrl + /: 注释代码</p>
+
+      
+    </div>
+    
+    <footer>
+      <div class="alignleft">
+      
+      
+  
+  <div class="tags">
+    <a href="/tags/Sublime/">Sublime</a>
+  </div>
+
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    
+  </div>
+</article>
+
+
+<section id="comment">
+  
+            <!-- Duoshuo Comment BEGIN -->
+            <div class="ds-thread"></div>
+            <script type="text/javascript">
+                var duoshuoQuery = {short_name:"willerce"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = 'http://static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+            </script>
+            <!-- Duoshuo Comment END -->
+      
+  
+</section>
+
+</div></div>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="inner"><div class="alignleft">
+  <p>
+  
+    &copy; 2015 douglee
+  
+  Theme By <a href="http://github.com/willerce/hexo-theme-noderce">Noderce</a> 
+  </p>
+</div>
+<div class="clearfix"></div></div></footer>
+  <script type="text/javascript">
+
+</script>
+
+</body>
+</html>
