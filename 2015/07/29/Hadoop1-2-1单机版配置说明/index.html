@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Dougle Lee&#39; BLog › Hadoop1.2.1单机版配置说明</title>
+  <meta name="author" content="douglee">
+  
+  <meta name="description" content="前端时间一直在研究Nutch，需要对Hadoop有所了解。之前没有接触过Hadoop，在这里把学习Hadoop的过程记录下来。
+今天第一篇，Hadoop1.2.1单机版配置说明。
+环境：Ubuntu14.04
+
+前提：JDK安装并设置。
+下载hadoop.1.2.1.tar.gz。
+例如在usr/l">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Hadoop1.2.1单机版配置说明"/>
+  <meta property="og:site_name" content="Dougle Lee&#39; BLog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="http://feeds.feedburner.com/willerce" title="Dougle Lee&#39; BLog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32857089-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">Dougle Lee&#39; BLog</a></h1>
+  <h2><a href="/">随心随性，万法同宗</a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/blog">Blog</a></li>
+      
+      <li><a href="https://github.com/DougLee">Github</a></li>
+      
+      <li><a href="http://weibo.com/daominlee">Weibo</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">Hadoop1.2.1单机版配置说明</h1>
+  
+
+      
+      <time datetime="2015-07-29T13:46:35.000Z">2015-07-29</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>前端时间一直在研究Nutch，需要对Hadoop有所了解。之前没有接触过Hadoop，在这里把学习Hadoop的过程记录下来。</p>
+<p>今天第一篇，Hadoop1.2.1单机版配置说明。</p>
+<p>环境：Ubuntu14.04</p>
+<ol>
+<li>前提：JDK安装并设置。</li>
+<li>下载hadoop.1.2.1.tar.gz。</li>
+<li>例如在usr/locarl/下新建一个hadoop文件夹，将下载的hadoop放到这个文件夹下。</li>
+<li>解压hadoop-1.2.1.tar.gz，命令 sudo tar -zxf hadoop-1.2.1.tar.gz。</li>
+<li>修改hadoop环境变量：<br> a. 取得hadoop-1.2.1文件夹的读写权限：Sudo chown -R douglee hadoop-1.2.1<br> b. 修改hadoop-env.sh文件：sudo gedit hadoop-1.2.1/conf/hadoop-env.sh<br> c. 修改JAVA_HOME为本机的jdk安装地址即可</li>
+<li>验证hadoop是否正常运行：<br> a. cd hadoop-1.2.1<br> b. Bin/hadoop version， 是否出来hadoop的相关版本信息</li>
+<li>运行wordcount实例程序<br> a. 新建一个input文件夹：Mkdir input<br> b. 将conf下的文件复制到input下： cp conf/<em> input<br> c. 运行wordcount程序，将结果写入output：bin/hadoop jar hadoop-example-1.2.1.jar wordcount input output<br> d. Cat output/</em>  查看输出结果</li>
+<li>参考：<a href="http://blog.csdn.net/wyswlp/article/details/10564847" target="_blank" rel="external">http://blog.csdn.net/wyswlp/article/details/10564847</a></li>
+</ol>
+<p>下一篇记录一下伪分布式的配置说明。</p>
+
+      
+    </div>
+    
+    <footer>
+      <div class="alignleft">
+      
+      
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    
+  </div>
+</article>
+
+
+<section id="comment">
+  
+            <!-- Duoshuo Comment BEGIN -->
+            <div class="ds-thread"></div>
+            <script type="text/javascript">
+                var duoshuoQuery = {short_name:"willerce"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = 'http://static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+            </script>
+            <!-- Duoshuo Comment END -->
+      
+  
+</section>
+
+</div></div>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="inner"><div class="alignleft">
+  <p>
+  
+    &copy; 2015 douglee
+  
+  Theme By <a href="http://github.com/willerce/hexo-theme-noderce">Noderce</a> 
+  </p>
+</div>
+<div class="clearfix"></div></div></footer>
+  <script type="text/javascript">
+
+</script>
+
+</body>
+</html>
