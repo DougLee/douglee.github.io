@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Dougle Lee&#39; BLog › Nutch 中为Webpage模型添加自定义字段</title>
+  <meta name="author" content="douglee">
+  
+  <meta name="description" content="近来一直在研究nutch，今天想在默认的webpage表中增加几个自定义字段，折腾了一天，终于加入成功了。我的环境是win7 + Nutch2.2.1 + mysql5.6.12。
+一句话，新增自定义字段主要需要修改两个文件：webpage.java和gora-sql-mapping.xml（这里我">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Nutch 中为Webpage模型添加自定义字段"/>
+  <meta property="og:site_name" content="Dougle Lee&#39; BLog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="http://feeds.feedburner.com/douglee" title="Dougle Lee&#39; BLog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32857089-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">Dougle Lee&#39; BLog</a></h1>
+  <h2><a href="/">随心随性，万法同宗</a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/blog">Blog</a></li>
+      
+      <li><a href="https://github.com/DougLee">Github</a></li>
+      
+      <li><a href="http://weibo.com/daominlee">Weibo</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">Nutch 中为Webpage模型添加自定义字段</h1>
+  
+
+      
+      <time datetime="2015-07-31T08:33:18.000Z">2015-07-31</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>近来一直在研究nutch，今天想在默认的webpage表中增加几个自定义字段，折腾了一天，终于加入成功了。<br>我的环境是win7 + Nutch2.2.1 + mysql5.6.12。</p>
+<p>一句话，新增自定义字段主要需要修改两个文件：<strong>webpage.java</strong>和<strong>gora-sql-mapping</strong>.xml（这里我使用的数据库是mysql，如果是hbase的话修改gora-hbase-mapping.xml文件）。</p>
+<p>第一，找到webpage.class在webpage中的_SCHEMA Field以及新字段对应的属性做相应的修改。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">public static final Schema _SCHEMA = Schema</span><br><span class="line">        .parse("&#123;\"type\":\"record\",\"name\":\"WebPage\",\"namespace\":\"org.apache.nutch.storage\",\"fields\":[&#123;\e\":\"baseUrl\",\"type\":\"string\"&#125;,&#123;\"name\":\"status\",\"type\":\"int\"&#125;,&#123;\"name\":\"fetchTime\",\"type\long\"&#125;,&#123;\"name\":\"prevFetchTime\",\"type\":\"long\"&#125;,&#123;\"name\":\"fetchInterval\",\"type\":\"int\"&#125;,&#123;\"nam\"retriesSinceFetch\",\"type\":\"int\"&#125;,&#123;\"name\":\"modifiedTime\",\"type\":\"long\"&#125;,&#123;\"name\":\"prevModifime\",\"type\":\"long\"&#125;,&#123;\"name\":\"protocolStatus\",\"type\":&#123;\"type\":\"record\",\"name\":\"ProtocolStat,\"fields\":[&#123;\"name\":\"code\",\"type\":\"int\"&#125;,&#123;\"name\":\"args\",\"type\":&#123;\"type\":\"array\",\"items\"tring\"&#125;&#125;,&#123;\"name\":\"lastModified\",\"type\":\"long\"&#125;]&#125;&#125;,&#123;\"name\":\"content\",\"type\":\"bytes\"&#125;,&#123;\"nam\"contentType\",\"type\":\"string\"&#125;,&#123;\"name\":\"prevSignature\",\"type\":\"bytes\"&#125;,&#123;\"name\":\"signature\type\":\"bytes\"&#125;,&#123;\"name\":\"title\",\"type\":\"string\"&#125;,&#123;\"name\":\"text\",\"type\":\"string\"&#125;,&#123;\"name\parseStatus\",\"type\":&#123;\"type\":\"record\",\"name\":\"ParseStatus\",\"fields\":[&#123;\"name\":\"majorCode\",\"\":\"int\"&#125;,&#123;\"name\":\"minorCode\",\"type\":\"int\"&#125;,&#123;\"name\":\"args\",\"type\":&#123;\"type\":\"array\",\"ite:\"string\"&#125;&#125;]&#125;&#125;,&#123;\"name\":\"score\",\"type\":\"float\"&#125;,&#123;\"name\":\"reprUrl\",\"type\":\"string\"&#125;,&#123;\"name"headers\",\"type\":&#123;\"type\":\"map\",\"values\":\"string\"&#125;&#125;,&#123;\"name\":\"outlinks\",\"type\":&#123;\"type\":\"m,\"values\":\"string\"&#125;&#125;,&#123;\"name\":\"inlinks\",\"type\":&#123;\"type\":\"map\",\"values\":\"string\"&#125;&#125;,&#123;\"name\"arkers\",\"type\":&#123;\"type\":\"map\",\"values\":\"string\"&#125;&#125;,&#123;\"name\":\"metadata\",\"type\":&#123;\"type\":\"map"values\":\"bytes\"&#125;&#125;,&#123;\"name\":\"batchId\",\"type\":\"string\"&#125;,&#123;\"name\":\"body\",\"type\":\"bytes\&#123;\"name\":\"ISSN\",\"type\":\"string\"&#125;]&#125;</span><br><span class="line">public static enum Field &#123;</span><br><span class="line">    BASE_URL(0, "baseUrl"), STATUS(1, "status"), FETCH_TIME(2, "fetchTime"), PREV_FETCH_TIME(</span><br><span class="line">            3, "prevFetchTime"), FETCH_INTERVAL(4, "fetchInterval"), RETRIES_SINCE_FETCH(</span><br><span class="line">            5, "retriesSinceFetch"), MODIFIED_TIME(6, "modifiedTime"), PREV_MODIFIED_TIME(</span><br><span class="line">            7, "prevModifiedTime"), PROTOCOL_STATUS(8, "protocolStatus"), CONTENT(</span><br><span class="line">            9, "content"), CONTENT_TYPE(10, "contentType"), PREV_SIGNATURE(</span><br><span class="line">            11, "prevSignature"), SIGNATURE(12, "signature"), TITLE(13,</span><br><span class="line">            "title"), TEXT(14, "text"), PARSE_STATUS(15, "parseStatus"), SCORE(</span><br><span class="line">            16, "score"), REPR_URL(17, "reprUrl"), HEADERS(18, "headers"), OUTLINKS(</span><br><span class="line">            19, "outlinks"), INLINKS(20, "inlinks"), MARKERS(21, "markers"), METADATA(</span><br><span class="line">            22, "metadata"), BATCH_ID(23, "batchId"), BODY(24, "body"), ISSN(25, "ISSN");</span><br><span class="line">    private int index;</span><br><span class="line">    private String na</span><br><span class="line">    Field(int index, String name) &#123;</span><br><span class="line">        this.index = index;</span><br><span class="line">        this.name = name;</span><br><span class="line">  </span><br><span class="line">    public int getIndex() &#123;</span><br><span class="line">        return index;</span><br><span class="line">  </span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">  </span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">public static final String[] _ALL_FIELDS = &#123; "baseUrl", "status",</span><br><span class="line">        "fetchTime", "prevFetchTime", "fetchInterval", "retriesSinceFetch",</span><br><span class="line">        "modifiedTime", "prevModifiedTime", "protocolStatus", "content",</span><br><span class="line">        "contentType", "prevSignature", "signature", "title", "text",</span><br><span class="line">        "parseStatus", "score", "reprUrl", "headers", "outlinks",</span><br><span class="line">        "inlinks", "markers", "metadata", "batchId", "body", "issn" &#125;;</span><br><span class="line">static &#123;</span><br><span class="line">    PersistentBase.registerFields(WebPage.class, _ALL_FIELDS);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private Utf8 body;</span><br><span class="line">private String ISSN;</span><br><span class="line"></span><br><span class="line">public Utf8 getBody() &#123;</span><br><span class="line">    return (Utf8) get(24);</span><br><span class="line">&#125;</span><br><span class="line">public void setBody(Utf8 value) &#123;</span><br><span class="line">    put(24, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public String getISSN() &#123;</span><br><span class="line">    return (String) get(25);</span><br><span class="line">&#125;</span><br><span class="line">public void setISSN(String value) &#123;</span><br><span class="line">    put(25, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以及Object get()和set()中添加新字段的相关信息。</p>
+<p>第二 在gora-sql-mapping文件中添加想要增加的字段的Mapping关系，如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">field</span> <span class="attribute">name</span>=<span class="value">"body"</span> <span class="attribute">column</span>=<span class="value">"body"</span> <span class="attribute">length</span>=<span class="value">"32000"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">field</span> <span class="attribute">name</span>=<span class="value">"ISSN"</span> <span class="attribute">column</span>=<span class="value">"ISSN"</span> <span class="attribute">length</span>=<span class="value">"10"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>以上就可以直接运行nutch了，如果有报错信息的话可以调试查看gora-sql-0.2.jar中的SqlStore.java中的createSchema()方法，这个方法中会生成有建表语句，根据错误信息做相应的修改即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">createSchema</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!schemaExists()) &#123;</span><br><span class="line">    log.info(<span class="string">"creating schema: "</span> + sqlTable.getAbsoluteName());</span><br><span class="line">    CreateTableQuery query = <span class="keyword">new</span> CreateTableQuery(sqlTable, <span class="keyword">true</span>);</span><br><span class="line">    setColumnConstraintForQuery(query, primaryColumn);</span><br><span class="line">    <span class="keyword">for</span>(Column column : mapping.getFields().values()) &#123;</span><br><span class="line">      setColumnConstraintForQuery(query, column);</span><br><span class="line">    &#125;</span><br><span class="line">    PreparedStatement statement = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      statement = connection.prepareStatement(query.validate().toString());</span><br><span class="line">      statement.executeUpdate();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SQLException ex) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> IOException(ex);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      SqlUtils.close(statement);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>EOF</p>
+
+      
+    </div>
+    
+    <footer>
+      <div class="alignleft">
+      
+      
+  
+  <div class="tags">
+    <a href="/tags/nutch/">nutch</a>
+  </div>
+
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    
+  </div>
+</article>
+
+
+<section id="comments">
+<!-- 多说评论框 start -->
+<div class="ds-thread"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"douglee"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- 多说公共JS代码 end -->
+  </section>
+
+</div></div>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="inner"><div class="alignleft">
+  <p>
+  
+    &copy; 2015 douglee
+  
+  <br/>
+  Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  <!--Theme By <a href="http://github.com/willerce/hexo-theme-noderce">Noderce</a> -->
+  </p>
+</div>
+<div class="clearfix"></div></div></footer>
+  <script type="text/javascript">
+
+</script>
+
+</body>
+</html>
