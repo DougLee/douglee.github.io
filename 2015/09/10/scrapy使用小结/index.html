@@ -79,7 +79,52 @@ scrapy使用Twisted这个异步网络库来处理网络通讯，包含了各种�
 <p>scrapy使用<a href="http://twistedmatrix.com/trac/" target="_blank" rel="external">Twisted</a>这个异步网络库来处理网络通讯，包含了各种中间件接口，可以灵活的完成各种需求。整体架构如下图所示：<br><img src="/image/scrapy/40238622_1.png" alt="pic"></p>
 <h3 id="安装">安装</h3><p>可以使用pip安装scrapy，安装的时候scrapy需要的一些依赖包也会一并安装。这里使用豆瓣的py镜像，这样安装速度会比较快。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install scrapy -i http://pypi.douban.com/simple</span><br></pre></td></tr></table></figure>
-<h3 id="第一个爬虫">第一个爬虫</h3><h3 id=""> </h3><h3 id="遇到的几个问题">遇到的几个问题</h3><h3 id="References">References</h3>
+<h3 id="第一个爬虫">第一个爬虫</h3><p>接下来开始编写第一个爬虫，以抓取知乎用户为例。</p>
+<h4 id="新建项目">新建项目</h4><p>首先，需要定义一个scrapy项目，运行命令：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy startproject zhihuspider</span><br></pre></td></tr></table></figure>
+<p>会创建一个zhihuspider项目，包含如下内容：<br><img src="/image/scrapy/1.jpg" alt="pic"></p>
+<p>其中：</p>
+<ul>
+<li>scrapy.cfg: 项目的配置文件</li>
+<li>zhihuSpider/: 该项目的python模块，本爬虫的代码会存放在此处。</li>
+<li>zhihuSpider/items.py: 项目中的item文件，用来定义存储数据的item结构。</li>
+<li>zhihuSpider/pipelines.py: 项目中的pipelines文件，可编写一些pipeline类，用来操作抓取到的item，比如存入数据库，或者保存json文件</li>
+<li>zhihuSpider/settings.py: 项目的设置文件。</li>
+<li>zhihuSpider/spiders/: 放置spider代码的目录</li>
+</ul>
+<h4 id="定义Item数据">定义Item数据</h4><p>Item是保存抓取到数据的容器。类似于ORM，可创建一个<strong>scrapy.Item</strong>类，并且定义类型为<strong>scrapy.Field</strong>的类属性来定义一个Item。</p>
+<p>分析下知乎用户中一些我们想要抓取的信息，这里假设只抓取用户名，用户ID，可用户的链接。item.py文件如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhihuspiderItem</span><span class="params">(scrapy.Item)</span>:</span></span><br><span class="line">    <span class="comment"># define the fields for your item here like:</span></span><br><span class="line">    <span class="comment"># name = scrapy.Field()</span></span><br><span class="line">    name = scrapy.Field()</span><br><span class="line">    userID = scrapy.Field()</span><br><span class="line">    link = scrapy.Field()</span><br></pre></td></tr></table></figure>
+<h4 id="编写spider">编写spider</h4><p>创建一个spider，需要继承<strong>scrapy.Spider</strong>类，且定义三个属性：</p>
+<ul>
+<li>name: 用于区分Spider，相当于该爬虫的唯一标识</li>
+<li>start_urls: 包含Spider在启动时进行爬取的url列表</li>
+<li>parse()：Spider的一个方法。每一个抓取完的url生成的<strong>Response</strong>对象会作为参数传递给该方法。该方法可以解析返回的数据，提取数据，以及生成需要进一步处理的URL的<strong>Request</strong>对象。</li>
+</ul>
+<p>在zhihuSpider/spiders下新建一个peopleSpider.py文件，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> zhihuSpider.items <span class="keyword">import</span> ZhihuspiderItem</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PeopleSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="string">"zhihu"</span></span><br><span class="line">    start_urls = [</span><br><span class="line">        <span class="string">'http://www.zhihu.com/people/Douglee'</span></span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span> </span><br><span class="line">        item = ZhihuspiderItem()</span><br><span class="line">        item[<span class="string">'link'</span>] =  response.url</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> item</span><br></pre></td></tr></table></figure>
+<h4 id="开始抓取">开始抓取</h4><p>运行抓取命令scrapy crawl #name, 如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl zhihu</span><br></pre></td></tr></table></figure>
+<p>可以从shell窗口看到item的信息，如下图：</p>
+<p><img src="/image/scrapy/2.jpg" alt="pic"></p>
+<h3 id="使用正则和xpath解析数据">使用正则和xpath解析数据</h3><p>上边的parse()方法只有link，没有name和userID，现在来解析这两个属性。</p>
+<p>通过观察可以发现，userID可以从url中获取，这里可以定义一个正则，用正则来获取userID。</p>
+<p>而name可以从抓取到的页面中用xpth分析出来，我经常使用Chrome浏览器，用Chrome可以很方便的取出来xpath，两个方法：</p>
+<ol>
+<li><p>按F12 使用Chrome的develop tools，选中页面上需要的数据，右键copy xpath，如图：<br><img src="/image/scrapy/3.png" alt="pic"></p>
+</li>
+<li><p>安装一个Xpath helper插件，可以更方便的取出xpath。</p>
+</li>
+</ol>
+<p>这里需添加两个引用，完整的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> zhihuSpider.items <span class="keyword">import</span> ZhihuspiderItem</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PeopleSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="string">"zhihu"</span></span><br><span class="line">    start_urls = [</span><br><span class="line">        <span class="string">'http://www.zhihu.com/people/Douglee'</span></span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        nameXpath = <span class="string">r"//div[@class='title-section ellipsis']/span[@class='name']/text()"</span></span><br><span class="line">        pattern = <span class="string">r'http://www.zhihu.com/people/([\w+-]+)$'</span></span><br><span class="line"></span><br><span class="line">        item = ZhihuspiderItem()</span><br><span class="line">        item[<span class="string">'name'</span>] = Selector(response).xpath(nameXpath).extract()[<span class="number">0</span>]</span><br><span class="line">        item[<span class="string">'userID'</span>] = re.search(pattern, response.url).group(<span class="number">1</span>)</span><br><span class="line">        item[<span class="string">'link'</span>] =  response.url</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> item</span><br></pre></td></tr></table></figure>
+<p>抓取的shell窗口信息：<br><img src="/image/scrapy/4.jpg" alt="pic"></p>
+<p>至此，就完成了一个简单的爬虫。</p>
+<h3 id="References">References</h3><ol>
+<li>官方文档：<a href="http://scrapy.readthedocs.org/en/latest/" target="_blank" rel="external">http://scrapy.readthedocs.org/en/latest/</a></li>
+<li>中文文档：<a href="https://scrapy-chs.readthedocs.org/zh_CN/0.24/" target="_blank" rel="external">https://scrapy-chs.readthedocs.org/zh_CN/0.24/</a></li>
+</ol>
+
       
     </div>
     
