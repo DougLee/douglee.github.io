@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Dougle Lee&#39; BLog › Java中String、Date和Timestamp之间的转换</title>
+  <meta name="author" content="douglee">
+  
+  <meta name="description" content="记录一下Java中String和Date、Timestamp之间的转换。下文的代码可能会用到一些包。
+1234import java.sql.Timestamp;import java.text.DateFormat;import java.text.SimpleDateFormat;import ">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Java中String、Date和Timestamp之间的转换"/>
+  <meta property="og:site_name" content="Dougle Lee&#39; BLog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="http://feeds.feedburner.com/douglee" title="Dougle Lee&#39; BLog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32857089-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">Dougle Lee&#39; BLog</a></h1>
+  <h2><a href="/">随心随性，万法同宗</a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/blog">Blog</a></li>
+      
+      <li><a href="https://github.com/DougLee">Github</a></li>
+      
+      <li><a href="http://weibo.com/daominlee">Weibo</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">Java中String、Date和Timestamp之间的转换</h1>
+  
+
+      
+      <time datetime="2015-09-24T06:18:47.000Z">2015-09-24</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>记录一下Java中String和Date、Timestamp之间的转换。下文的代码可能会用到一些包。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.Timestamp;</span><br><span class="line"><span class="keyword">import</span> java.text.DateFormat;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br></pre></td></tr></table></figure>
+<h3 id="String和Date之间的转换">String和Date之间的转换</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Date date = <span class="keyword">new</span> Date();</span><br><span class="line">SimpleDateFormat dateformat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>);</span><br><span class="line">        </span><br><span class="line"><span class="comment">//Date to String</span></span><br><span class="line">String a1 = dateformat.format(date);</span><br><span class="line">System.out.println(<span class="string">"Date to String："</span> + a1);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//String to Date</span></span><br><span class="line">    Date d = dateformat.parse(<span class="string">"2015-09-24 10:48:06"</span>);</span><br><span class="line">    System.out.println(<span class="string">"String to Date: "</span> + d);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="String和Timestamp之间的转换">String和Timestamp之间的转换</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Timestamp ts = <span class="keyword">new</span> Timestamp(System.currentTimeMillis());</span><br><span class="line">System.out.println(<span class="string">"Timestamp: "</span> + ts);</span><br><span class="line"></span><br><span class="line"><span class="comment">// String to Timestamp</span></span><br><span class="line">String tsStr = <span class="string">"2011-05-09 11:49:45"</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    ts = Timestamp.valueOf(tsStr);</span><br><span class="line">    System.out.println(<span class="string">"String to Timestamp: "</span> + ts);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Timestamp to String</span></span><br><span class="line">String tsStr1 = <span class="string">""</span>;</span><br><span class="line">DateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy/MM/dd HH:mm:ss"</span>);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 方法一</span></span><br><span class="line">    tsStr1 = sdf.format(ts);</span><br><span class="line">    System.out.println(<span class="string">"Timestamp to String1: "</span> + tsStr);</span><br><span class="line">    <span class="comment">// 方法二</span></span><br><span class="line">    tsStr1 = ts.toString();</span><br><span class="line">    System.out.println(<span class="string">"Timestamp to String2: "</span> + tsStr);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Date和Timestamp之间的转换">Date和Timestamp之间的转换</h3><p>Timestamp继承自Date</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Timestamp ts = <span class="keyword">new</span> Timestamp(System.currentTimeMillis());</span><br><span class="line">System.out.println(<span class="string">"Timestamp: "</span> + ts);</span><br><span class="line"><span class="comment">// Date to Timestamp (father to child)</span></span><br><span class="line">Timestamp ts1 = <span class="keyword">new</span> Timestamp(date.getTime());</span><br><span class="line">System.out.println(<span class="string">"Date to Timestamp: "</span> + ts1);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Timestamp to Date</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    date = ts;</span><br><span class="line">    System.out.println(<span class="string">"Timestamp to Date: "</span> + date);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <footer>
+      <div class="alignleft">
+      
+      
+  
+  <div class="tags">
+    <a href="/tags/java/">java</a>
+  </div>
+
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    
+  </div>
+</article>
+
+
+<section id="comments">
+<!-- 多说评论框 start -->
+<div class="ds-thread"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"douglee"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- 多说公共JS代码 end -->
+  </section>
+
+</div></div>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="inner"><div class="alignleft">
+  <p>
+  
+    &copy; 2015 douglee
+  
+  <br/>
+  Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  <!--Theme By <a href="http://github.com/willerce/hexo-theme-noderce">Noderce</a> -->
+  </p>
+</div>
+<div class="clearfix"></div></div></footer>
+  <script type="text/javascript">
+
+</script>
+
+</body>
+</html>
