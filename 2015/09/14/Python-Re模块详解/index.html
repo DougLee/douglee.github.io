@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Dougle Lee&#39; BLog › Python Re模块详解</title>
+  <meta name="author" content="douglee">
+  
+  <meta name="description" content="正则表达式是开发中比较重要的一个技能，可以说几乎上是没有不用做字符串处理的程序。
+正则表达式基础基本用法下图列出了一些基本的正则表达式语法：
+贪婪模式在Python里默认数量词是贪婪的，总是尝试匹配尽可能多的字符。
+转义字符Python在正则表达式里使用”\”作为转义字符，这就可能造成反斜杠困扰。假">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Python Re模块详解"/>
+  <meta property="og:site_name" content="Dougle Lee&#39; BLog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="http://feeds.feedburner.com/douglee" title="Dougle Lee&#39; BLog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32857089-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">Dougle Lee&#39; BLog</a></h1>
+  <h2><a href="/">随心随性，万法同宗</a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/blog">Blog</a></li>
+      
+      <li><a href="https://github.com/DougLee">Github</a></li>
+      
+      <li><a href="http://weibo.com/daominlee">Weibo</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+</div>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  <div class="post-content">
+    <header>
+      
+  
+    <h1 class="title">Python Re模块详解</h1>
+  
+
+      
+      <time datetime="2015-09-14T06:59:54.000Z">2015-09-14</time>
+      
+    </header>
+    <div class="entry">
+      
+        <p>正则表达式是开发中比较重要的一个技能，可以说几乎上是没有不用做字符串处理的程序。</p>
+<h2 id="正则表达式基础">正则表达式基础</h2><h3 id="基本用法">基本用法</h3><p>下图列出了一些基本的正则表达式语法：<br><img src="/image/python_Re/1.png" alt="pic"></p>
+<h3 id="贪婪模式">贪婪模式</h3><p>在Python里默认数量词是贪婪的，总是尝试匹配尽可能多的字符。</p>
+<h3 id="转义字符">转义字符</h3><p>Python在正则表达式里使用”\”作为转义字符，这就可能造成反斜杠困扰。假如你需要匹配文本中的字符”\”，那么使用编程语言表示的正则表达式里将需要4个反斜杠”\\“：前两个和后两个分别用于在编程语言里转义成反斜杠，转换成两个反斜杠后再在正则表达式里转义成一个反斜杠。Python里的原生字符串很好地解决了这个问题，这个例子中的正则表达式可以使用r”\“表示。同样，匹配一个数字的”\d”可以写成r”\d”。有了原生字符串，你再也不用担心是不是漏写了反斜杠，写出来的表达式也更直观。</p>
+<h2 id="Re模块">Re模块</h2><h3 id="初次见面">初次见面</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">pattern = <span class="string">r"a"</span></span><br><span class="line">s = <span class="string">"abcde"</span></span><br><span class="line"></span><br><span class="line">print(re.match(pattern, s))</span><br></pre></td></tr></table></figure>
+<h3 id="re-compile(pattern,_falgs=0)">re.compile(pattern, falgs=0)</h3><p>这个方法是Pattern类的工厂方法，将字符串形式的正则表达式编译为Pattern对象。第二个参数是匹配模式</p>
+<h3 id="re模块常用函数">re模块常用函数</h3><h4 id="re-search(pattern,_string,_flags=0)">re.search(pattern, string, flags=0)</h4><p>re.search函数会在字符串内查找模式匹配，只找到第一个匹配然后返回，如果字符串没有匹配，则返回None。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">s = <span class="string">'1111-1119'</span></span><br><span class="line">pattern = <span class="string">r'(\d+)-(\d+)'</span></span><br><span class="line"></span><br><span class="line">result = re.search(pattern, s, re.I)</span><br><span class="line"><span class="keyword">if</span> result:</span><br><span class="line">    print(result.group(<span class="number">0</span>))</span><br><span class="line">    print(result.group(<span class="number">1</span>))</span><br><span class="line">    print(result.group(<span class="number">2</span>))</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">'Not match'</span>)</span><br></pre></td></tr></table></figure></p>
+<h4 id="re-match(pattern,_string,_flags=0)">re.match(pattern, string, flags=0)</h4><p>尝试从字符串的开始匹配一个模式，也可以说是匹配第一个单词</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">s = <span class="string">'abc1111-1119'</span></span><br><span class="line">pattern = <span class="string">r'(\d+)-(\d+)$'</span></span><br><span class="line"></span><br><span class="line">result = re.match(pattern, s, re.I)</span><br><span class="line"><span class="keyword">if</span> result:</span><br><span class="line">    print(result.group(<span class="number">0</span>))</span><br><span class="line">    print(result.group(<span class="number">1</span>))</span><br><span class="line">    print(result.group(<span class="number">2</span>))</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">'Not match'</span>)</span><br><span class="line"><span class="comment"># 结果为Not match</span></span><br></pre></td></tr></table></figure>
+<p><strong>match只检测是不是在字符串的开始位置匹配，search会扫描整个字符串查找匹配</strong>。</p>
+<h4 id="re-findall(pattern,_string,_flags=0)">re.findall(pattern, string, flags=0)</h4><p>搜索string，以列表形式返回全部能匹配的子串,若没有匹配则返回None。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">s = <span class="string">'abc1111-1119'</span></span><br><span class="line">pattern = <span class="string">r'(\d+)-(\d+)$'</span></span><br><span class="line"></span><br><span class="line">t = re.findall(pattern, s)</span><br><span class="line">print(t)</span><br><span class="line"><span class="comment"># result: [('1111', '1119')]</span></span><br></pre></td></tr></table></figure>
+<h4 id="re-spit(pattern,_string,_maxsplit=0,_flags=0)">re.spit(pattern, string, maxsplit=0, flags=0)</h4><p>分割字符串</p>
+<ul>
+<li>pattern: 规则  </li>
+<li>string：要分割的字符串</li>
+<li>maxsplit：分割的次数，默认为0,即表示全部分割</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">s = <span class="string">'a1b2c3d4'</span></span><br><span class="line">pattern = <span class="string">r'\d+'</span></span><br><span class="line"></span><br><span class="line">print(re.split(pattern, s, <span class="number">1</span>))</span><br><span class="line"><span class="comment"># ['a', 'b2c3d4']</span></span><br><span class="line">print(re.split(pattern, s))</span><br><span class="line"><span class="comment">#['a', 'b', 'c', 'd', '']</span></span><br></pre></td></tr></table></figure>
+<h4 id="re-sub(pattern,_repl,_string,_count=0,_flags=0)">re.sub(pattern, repl, string, count=0, flags=0)</h4><p>替换字符串的匹配项</p>
+<ul>
+<li>pattern: 规则 </li>
+<li>repl：替换后的字符串 </li>
+<li>string：要替换的字符串</li>
+<li>maxsplit：匹配的次数，默认为0，全部匹配</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">s = <span class="string">'a1b2c3d4'</span></span><br><span class="line">pattern = <span class="string">r'\d+'</span></span><br><span class="line"></span><br><span class="line">print(re.sub(pattern, <span class="string">'|'</span>, s, <span class="number">1</span>))</span><br><span class="line"><span class="comment"># a|b2c3d4</span></span><br><span class="line">print(re.sub(pattern, <span class="string">'|'</span>, s))</span><br><span class="line"><span class="comment">#a|b|c|d|</span></span><br></pre></td></tr></table></figure>
+<h4 id="re-subn(pattern,_repl,_string,_count=0,_flags=0)">re.subn(pattern, repl, string, count=0, flags=0)</h4><p>返回替换后的字符串以及替换次数</p>
+<p>参数同sub</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">s = <span class="string">'a1b2c3d4'</span></span><br><span class="line">pattern = <span class="string">r'\d+'</span></span><br><span class="line"></span><br><span class="line">print(re.subn(pattern, <span class="string">'|'</span>, s, <span class="number">1</span>))</span><br><span class="line"><span class="comment"># ('a|b2c3d4', 1)</span></span><br><span class="line">print(re.subn(pattern, <span class="string">'|'</span>, s))</span><br><span class="line"><span class="comment">#('a|b|c|d|', 4)</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <footer>
+      <div class="alignleft">
+      
+      
+      </div>
+      <div class="clearfix"></div>
+    </footer>
+    
+  </div>
+</article>
+
+
+<section id="comments">
+<!-- 多说评论框 start -->
+<div class="ds-thread"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"douglee"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- 多说公共JS代码 end -->
+  </section>
+
+</div></div>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer"><div class="inner"><div class="alignleft">
+  <p>
+  
+    &copy; 2015 douglee
+  
+  <br/>
+  Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  <!--Theme By <a href="http://github.com/willerce/hexo-theme-noderce">Noderce</a> -->
+  </p>
+</div>
+<div class="clearfix"></div></div></footer>
+  <script type="text/javascript">
+
+</script>
+
+</body>
+</html>
