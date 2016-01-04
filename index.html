@@ -200,6 +200,96 @@
             
               
                 
+                <a class="post-title-link" href="/2016/01/04/ZooKeeper源码学习-2/" itemprop="url">
+                  ZooKeeper源码学习(2) ZooKeeper的启动过程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-01-04T14:14:39+08:00" content="2016-01-04">
+              2016-01-04
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/04/ZooKeeper源码学习-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/04/ZooKeeper源码学习-2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="ZooKeeper启动方法">ZooKeeper启动方法</h2><p>服务端启动：bin/zkServer.cmd(windows)</p>
+<p>其中，zkServer.cmd的代码如下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;setlocal&#10;call &#34;%~dp0zkEnv.cmd&#34;&#10;&#10;set ZOOMAIN=org.apache.zookeeper.server.quorum.QuorumPeerMain&#10;echo on&#10;call %JAVA% &#34;-Dzookeeper.log.dir=%ZOO_LOG_DIR%&#34; &#34;-Dzookeeper.root.logger=%ZOO_LOG4J_PROP%&#34; -cp &#34;%CLASSPATH%&#34; %ZOOMAIN% &#34;%ZOOCFG%&#34; %*&#10;&#10;endlocal</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/04/ZooKeeper源码学习-2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/12/31/使用ngrok为内网绑定一个公网域名/" itemprop="url">
                   使用ngrok为内网绑定一个公网域名
                 </a>
@@ -1434,7 +1524,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1502,7 +1592,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2015</span>
+  <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
