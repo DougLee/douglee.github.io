@@ -245,7 +245,7 @@ ngrok的使用场景作为一个Web开发者，我们有时候会需要临时地
 <li>注册ngrok，网址：<a href="https://dashboard.ngrok.com/user/signup" target="_blank" rel="external">https://dashboard.ngrok.com/user/signup</a>，注册是为了得到一个Author token，当然不注册也可以使用ngrok，只是映射的二级域名是随机的。</li>
 <li>把下载好的ngrok解压，并用windows命令窗口执行如下命令</li>
 </ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;ngrok authtoken yourtoken 5000&#10;&#10;ngrok http -subdomain=test 5000</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;ngrok authtoken yourtoken&#10;&#10;ngrok http -subdomain=test 5000</span><br></pre></td></tr></table></figure>
 <p>这时候在访问，<a href="http://test.ngrok.io" target="_blank" rel="external">http://test.ngrok.io</a>，会发现和访问 <a href="http://localhost:5000" target="_blank" rel="external">http://localhost:5000</a>的效果一样</p>
 <p>如果想要支持指定顶级域名的话需要付费。</p>
 </span>
