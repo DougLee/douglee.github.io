@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java," />
+  <meta name="keywords" content="Java,ZooKeeper," />
 
 
 
@@ -51,21 +51,33 @@
 
 
 
-<meta name="description" content="记录一下Java中String和Date、Timestamp之间的转换。下文的代码可能会用到一些包。
-1234import java.sql.Timestamp;import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;
-String和Date之间的转换123456789101112131">
+<meta name="description" content="引子考虑这样一个问题：某个服务可以配置为多个实例共同构成一个集群对外提供服务。其每一个实例本地都存有冗余数据，每一个实例都可以直接对外提供读写服务。在这个集群中为了保证数据的一致性，需要有一个Leader来协调一些事务，如何确定哪一个实例是Leader？
+难点在于：
+
+没有一个仲裁者来选定Leader
+每一个实例本地可能已经存在数据，不确定哪个实例上的数据是最新的
+
+分布式选举算法就是用来解决这个">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java中String、Date和Timestamp之间的转换">
-<meta property="og:url" content="http://yoursite.com/2015/09/24/Java中String、Date和Timestamp之间的转换/index.html">
+<meta property="og:title" content="ZooKeeper源码学习(3) Leader选举">
+<meta property="og:url" content="http://yoursite.com/2016/01/05/ZooKeeper3/index.html">
 <meta property="og:site_name" content="Dougle Lee' BLog">
-<meta property="og:description" content="记录一下Java中String和Date、Timestamp之间的转换。下文的代码可能会用到一些包。
-1234import java.sql.Timestamp;import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;
-String和Date之间的转换123456789101112131">
+<meta property="og:description" content="引子考虑这样一个问题：某个服务可以配置为多个实例共同构成一个集群对外提供服务。其每一个实例本地都存有冗余数据，每一个实例都可以直接对外提供读写服务。在这个集群中为了保证数据的一致性，需要有一个Leader来协调一些事务，如何确定哪一个实例是Leader？
+难点在于：
+
+没有一个仲裁者来选定Leader
+每一个实例本地可能已经存在数据，不确定哪个实例上的数据是最新的
+
+分布式选举算法就是用来解决这个">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java中String、Date和Timestamp之间的转换">
-<meta name="twitter:description" content="记录一下Java中String和Date、Timestamp之间的转换。下文的代码可能会用到一些包。
-1234import java.sql.Timestamp;import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;
-String和Date之间的转换123456789101112131">
+<meta name="twitter:title" content="ZooKeeper源码学习(3) Leader选举">
+<meta name="twitter:description" content="引子考虑这样一个问题：某个服务可以配置为多个实例共同构成一个集群对外提供服务。其每一个实例本地都存有冗余数据，每一个实例都可以直接对外提供读写服务。在这个集群中为了保证数据的一致性，需要有一个Leader来协调一些事务，如何确定哪一个实例是Leader？
+难点在于：
+
+没有一个仲裁者来选定Leader
+每一个实例本地可能已经存在数据，不确定哪个实例上的数据是最新的
+
+分布式选举算法就是用来解决这个">
 
 
 
@@ -77,7 +89,7 @@ String和Date之间的转换123456789101112131">
   };
 </script>
 
-  <title> Java中String、Date和Timestamp之间的转换 | Dougle Lee' BLog </title>
+  <title> ZooKeeper源码学习(3) Leader选举 | Dougle Lee' BLog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -197,7 +209,7 @@ String和Date之间的转换123456789101112131">
             
             
               
-                Java中String、Date和Timestamp之间的转换
+                ZooKeeper源码学习(3) Leader选举
               
             
           </h1>
@@ -206,8 +218,8 @@ String和Date之间的转换123456789101112131">
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-09-24T14:18:47+08:00" content="2015-09-24">
-              2015-09-24
+            <time itemprop="dateCreated" datetime="2016-01-05T11:05:41+08:00" content="2016-01-05">
+              2016-01-05
             </time>
           </span>
 
@@ -217,8 +229,8 @@ String和Date之间的转换123456789101112131">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/09/24/Java中String、Date和Timestamp之间的转换/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/24/Java中String、Date和Timestamp之间的转换/" itemprop="commentsCount"></span>
+                <a href="/2016/01/05/ZooKeeper3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/ZooKeeper3/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -237,12 +249,19 @@ String和Date之间的转换123456789101112131">
       
 
       
-        <span itemprop="articleBody"><p>记录一下Java中String和Date、Timestamp之间的转换。下文的代码可能会用到一些包。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.Timestamp;</span><br><span class="line"><span class="keyword">import</span> java.text.DateFormat;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br></pre></td></tr></table></figure>
-<h3 id="String和Date之间的转换">String和Date之间的转换</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Date date = <span class="keyword">new</span> Date();</span><br><span class="line">SimpleDateFormat dateformat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>);</span><br><span class="line">        </span><br><span class="line"><span class="comment">//Date to String</span></span><br><span class="line">String a1 = dateformat.format(date);</span><br><span class="line">System.out.println(<span class="string">"Date to String："</span> + a1);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//String to Date</span></span><br><span class="line">    Date d = dateformat.parse(<span class="string">"2015-09-24 10:48:06"</span>);</span><br><span class="line">    System.out.println(<span class="string">"String to Date: "</span> + d);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="String和Timestamp之间的转换">String和Timestamp之间的转换</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Timestamp ts = <span class="keyword">new</span> Timestamp(System.currentTimeMillis());</span><br><span class="line">System.out.println(<span class="string">"Timestamp: "</span> + ts);</span><br><span class="line"></span><br><span class="line"><span class="comment">// String to Timestamp</span></span><br><span class="line">String tsStr = <span class="string">"2011-05-09 11:49:45"</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    ts = Timestamp.valueOf(tsStr);</span><br><span class="line">    System.out.println(<span class="string">"String to Timestamp: "</span> + ts);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Timestamp to String</span></span><br><span class="line">String tsStr1 = <span class="string">""</span>;</span><br><span class="line">DateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy/MM/dd HH:mm:ss"</span>);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 方法一</span></span><br><span class="line">    tsStr1 = sdf.format(ts);</span><br><span class="line">    System.out.println(<span class="string">"Timestamp to String1: "</span> + tsStr);</span><br><span class="line">    <span class="comment">// 方法二</span></span><br><span class="line">    tsStr1 = ts.toString();</span><br><span class="line">    System.out.println(<span class="string">"Timestamp to String2: "</span> + tsStr);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Date和Timestamp之间的转换">Date和Timestamp之间的转换</h3><p>Timestamp继承自Date</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Timestamp ts = <span class="keyword">new</span> Timestamp(System.currentTimeMillis());</span><br><span class="line">System.out.println(<span class="string">"Timestamp: "</span> + ts);</span><br><span class="line"><span class="comment">// Date to Timestamp (father to child)</span></span><br><span class="line">Timestamp ts1 = <span class="keyword">new</span> Timestamp(date.getTime());</span><br><span class="line">System.out.println(<span class="string">"Date to Timestamp: "</span> + ts1);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Timestamp to Date</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    date = ts;</span><br><span class="line">    System.out.println(<span class="string">"Timestamp to Date: "</span> + date);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <span itemprop="articleBody"><h2 id="引子">引子</h2><p>考虑这样一个问题：某个服务可以配置为多个实例共同构成一个集群对外提供服务。其每一个实例本地都存有冗余数据，每一个实例都可以直接对外提供读写服务。在这个集群中为了保证数据的一致性，需要有一个Leader来协调一些事务，如何确定哪一个实例是Leader？</p>
+<p>难点在于：</p>
+<ul>
+<li>没有一个仲裁者来选定Leader</li>
+<li>每一个实例本地可能已经存在数据，不确定哪个实例上的数据是最新的</li>
+</ul>
+<p>分布式选举算法就是用来解决这个问题的。</p>
+<h2 id="主要流程">主要流程</h2><h2 id="名词解释">名词解释</h2><ul>
+<li>zxid(zookeeper transtion id): zookeeper事务id，即每条消息的id,是选举过程中能否成为Leader的关键因素，它决定当前Server要将自己这一票投给谁。zxid是一个64位数字，高32位为Leader信息又称为epoch，每次Leader转换时递增，低32位为消息编号，Leader转换时应该从0开始编号。</li>
+<li>myid/id(zookeeper server id): 她也是能否成为Leader的一个因素</li>
+<li>epoch/logicalclock: 主要用于描述Leader是否已经改变，每一个Server中启动都会有一个epoch，初始值为0，当开始新的一次选举时epoch加1，选举完成时epoch加1.</li>
+</ul>
+<h2 id="小结">小结</h2><p>Leader选举是ZooKeeper中最重要的部分之一。</p>
 </span>
       
     </div>
@@ -251,7 +270,9 @@ String和Date之间的转换123456789101112131">
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag">#java</a>
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/ZooKeeper/" rel="tag">#ZooKeeper</a>
           
         </div>
       
@@ -260,17 +281,13 @@ String和Date之间的转换123456789101112131">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/09/14/Python模块学习之re/" rel="next" title="Python模块学习之re">
-                <i class="fa fa-chevron-left"></i> Python模块学习之re
+              <a href="/2016/01/04/ZooKeeper源码学习-2/" rel="next" title="ZooKeeper源码学习(2) ZooKeeper的启动过程">
+                <i class="fa fa-chevron-left"></i> ZooKeeper源码学习(2) ZooKeeper的启动过程
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/02/Python中使用xlrd操作Excel/" rel="prev" title="Python中使用xlrd操作Excel">
-                Python中使用xlrd操作Excel <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -297,8 +314,8 @@ String和Date之间的转换123456789101112131">
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/09/24/Java中String、Date和Timestamp之间的转换/"
-           data-title="Java中String、Date和Timestamp之间的转换" data-url="http://yoursite.com/2015/09/24/Java中String、Date和Timestamp之间的转换/">
+      <div class="ds-thread" data-thread-key="2016/01/05/ZooKeeper3/"
+           data-title="ZooKeeper源码学习(3) Leader选举" data-url="http://yoursite.com/2016/01/05/ZooKeeper3/">
       </div>
     
   </div>
@@ -406,7 +423,7 @@ String和Date之间的转换123456789101112131">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#String和Date之间的转换"><span class="nav-number">1.</span> <span class="nav-text">String和Date之间的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String和Timestamp之间的转换"><span class="nav-number">2.</span> <span class="nav-text">String和Timestamp之间的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Date和Timestamp之间的转换"><span class="nav-number">3.</span> <span class="nav-text">Date和Timestamp之间的转换</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引子"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主要流程"><span class="nav-number">2.</span> <span class="nav-text">主要流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#名词解释"><span class="nav-number">3.</span> <span class="nav-text">名词解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
